@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Button, FormGroup } from 'reactstrap';
+import { EmojisList } from './EmojisList';
+import Emojis from './Emojis.jsx';
 
 export default () => {
   const styles = {
@@ -16,6 +18,7 @@ export default () => {
   //<Link> tags direct requests
   return (
     <Container style={styles.body}>
+      <Emojis />
       <Link style={{ textDecoration: 'none' }} to="">
         <h1>slackk-casa</h1>
       </Link>
