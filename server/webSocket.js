@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 
 const db = require('../database');
+const SlackApps = require('../slackapps');
 
 // creates a response object for sending to clients
 /*
@@ -100,6 +101,9 @@ const onMessage = async (ws, wss, data) => {
     }
     */
       try {
+        // check if the message received includes @appName for one of the slack apps we have running
+        SlackApps.parseMessageForBotInvocation(message.data.text);
+
         // post the given message to the database
         let postedMessage = await db.postMessage(
           message.data.text,
