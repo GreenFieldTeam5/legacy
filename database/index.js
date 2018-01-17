@@ -3,13 +3,15 @@ require('dotenv').config();
 const { Client } = require('pg');
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config();
 
 
 const client = new Client({
-  // connectionString: process.env.DATABASE_URL,
   connectionString: 'slack-casa',
   ssl: false,
 });
+
+console.log('Index.js ')
 
 client
   .connect()
@@ -20,6 +22,7 @@ client
 const initializeDB = () => {
   // initialize tables by reading schema files and running as query
   const schemas = ['/schema/users.sql', '/schema/workspaces.sql'];
+  console.log('Is init db running');
   return Promise.all(schemas.map(schema =>
     new Promise((resolve, reject) => {
       fs.readFile(
@@ -97,7 +100,11 @@ const getEmails = () => client.query('SELECT email FROM USERS')
   .then(data => data.rows);
 
 // create necessary tables if environment flag INITIALIZEDB is set to true
+
+console.log('process env', process.env.INITIALIZEDB);
+
 if (process.env.INITIALIZEDB) {
+  console.log('Does this run tho')
   initializeDB()
     .then()
     .catch(err => console.error('error creating database tables, ', err.stack));

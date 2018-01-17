@@ -55,6 +55,7 @@ router.post('/signup', async (req, res) => {
     email.sendWelcomeEmail(req.body.username, req.body.email).then().catch();
     return res.sendStatus(200);
   } catch (err) {
+    console.log(err);
     return res.status(401).json(err.stack);
   }
 });
