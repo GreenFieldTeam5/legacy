@@ -48,6 +48,7 @@ export default class App extends React.Component {
     // on key press enter send message and reset text box
     if (event.charCode === 13 && !event.shiftKey) {
       event.preventDefault();
+      console.log(this.props);
       sendMessage({
         username: this.props.location.state.username,
         text: this.state.query,
