@@ -5,12 +5,12 @@ import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
 
-//The main component of the App. Renders the core functionality of the project.
+// The main component of the App. Renders the core functionality of the project.
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //Default message informs the user to select a workspace
+      // Default message informs the user to select a workspace
       messages: [
         {
           text: 'Welcome to slackk-casa! Please select or create a workspace!',
@@ -58,10 +58,8 @@ export default class App extends React.Component {
         query: '',
       });
     }
-
-
   }
-  //grabs all existing workspaces
+  // grabs all existing workspaces
   loadWorkSpaces() {
     fetch('/workspaces')
       .then(resp => resp.json())
@@ -69,11 +67,11 @@ export default class App extends React.Component {
       .catch(console.error);
   }
 
-  //Helper function to reassign current workspace
+  // Helper function to reassign current workspace
   changeCurrentWorkSpace(id, name) {
     this.setState({ currentWorkSpaceId: id, currentWorkSpaceName: name });
   }
-  //renders nav bar, body(which contains all message components other than input), and message input
+  // renders nav bar, body(which contains all message components other than input), and message input
   render() {
     let {
       messages, query, workSpaces, currentWorkSpaceId, currentWorkSpaceName,
