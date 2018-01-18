@@ -7,7 +7,7 @@ require('dotenv').config();
 
 
 const client = new Client({
-  connectionString: 'slack-casa',
+  connectionString: process.env.DATABASE_URL || 'slack-casa',
   ssl: false,
 });
 
