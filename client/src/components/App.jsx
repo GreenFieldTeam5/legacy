@@ -121,6 +121,7 @@ export default class App extends React.Component {
           loadWorkSpaces={() => this.loadWorkSpaces()}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
+          activeUsername={this.props.location.state.username}
         />
         <div style={{ marginLeft: '150px' }}>
           {this.state.showEmojisDropdown &&

@@ -8,7 +8,6 @@ export default class MessageList extends React.Component {
     super(props);
 
     this.state = {
-      activeUsername: '🎄 I R H E A D',
       activeEmoji: 'em-stuck_out_tongue_winking_eye',
     };
 
@@ -27,7 +26,7 @@ export default class MessageList extends React.Component {
             <MessageEntry
               message={message}
               key={message.id}
-              activeUsername={this.state.activeUsername}
+              activeUsername={this.props.activeUsername}
               activeEmoji={this.state.activeEmoji}
               showEmojisDropdown={this.state.showEmojisDropdown}
               changeActiveEmoji={this.changeActiveEmoji}
