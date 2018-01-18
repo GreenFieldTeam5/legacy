@@ -2,9 +2,9 @@ const bcrypt = require('bcrypt');
 const db = require('../database');
 
 // add a user to the database, uses bcrypt to hash password
-const addUser = async (username, password, email, passwordHint) =>
+const addUser = async (username, password, email, passwordHint, clientTimezone) =>
   // insert user into users table with hashed password
-  db.createUser(username, await bcrypt.hash(password, 1), email, passwordHint);
+  db.createUser(username, await bcrypt.hash(password, 1), email, passwordHint, clientTimezone);
 
 // checks username and password against entries in the database, uses bcrypt to compare hashes
 const checkUser = async (username, password) => {

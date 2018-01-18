@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Alert, FormGroup, Input, Button } from 'reactstrap';
+import Moment from 'moment-timezone';
 
 export default class Signup extends React.Component {
   constructor(props) {
@@ -30,6 +31,10 @@ export default class Signup extends React.Component {
     if (email === '') {
       return this.setState({ signupStatus: 'Enter an email' });
     }
+
+    // get the user's timezone
+    const clientTimezone = Moment.tz.guess();
+
     //actual post to database
     fetch('/signup', {
       method: 'POST',
@@ -38,6 +43,7 @@ export default class Signup extends React.Component {
         password,
         email,
         passwordHint,
+        clientTimezone,
       }),
       headers: { 'content-type': 'application/json' },
     })
