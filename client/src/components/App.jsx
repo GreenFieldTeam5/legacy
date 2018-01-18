@@ -25,6 +25,7 @@ export default class App extends React.Component {
       query: '',
       currentWorkSpaceId: 0,
       currentWorkSpaceName: '',
+      slackBot: []
     };
   }
 
@@ -84,6 +85,7 @@ export default class App extends React.Component {
           messages={messages}
           workSpaces={workSpaces}
           loadWorkSpaces={() => this.loadWorkSpaces()}
+          loadSlackBot={() => this.loadSlackBot()}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
         />

@@ -21,7 +21,7 @@ client
 // create tables needed by server
 const initializeDB = () => {
   // initialize tables by reading schema files and running as query
-  const schemas = ['/schema/users.sql', '/schema/workspaces.sql', '/schema/slackbot.sql'];
+  const schemas = ['/schema/users.sql', '/schema/workspaces.sql'];
   console.log('Is init db running');
   return Promise.all(schemas.map(schema =>
     new Promise((resolve, reject) => {
@@ -99,6 +99,9 @@ const getWorkspaces = () => client.query('SELECT * FROM workspaces').then(data =
 const getEmails = () => client.query('SELECT email FROM USERS')
   .then(data => data.rows);
 
+// get all info from slack-bot messages
+const getSlackBotWorkspace = () => client.query('SELECT * from slackbot').then(data => data.rows);
+
 // create necessary tables if environment flag INITIALIZEDB is set to true
 
 console.log('process env', process.env.INITIALIZEDB);
@@ -121,4 +124,5 @@ module.exports = {
   getWorkspaces,
   getEmails,
   getPasswordHint,
+  getSlackBotWorkspace
 };
