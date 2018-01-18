@@ -9,7 +9,7 @@ export default class MessageList extends React.Component {
 
     this.state = {
       activeUsername: '🎄 I R H E A D',
-      activeEmoji: 'stuck_out_tongue.png',
+      activeEmoji: 'em-stuck_out_tongue_winking_eye',
     };
 
     this.changeActiveEmoji = this.changeActiveEmoji.bind(this);

@@ -90,3 +90,4 @@ package-lock.json
 
 # webpack
 client/dist/bundle.js
+Icon
