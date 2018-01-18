@@ -14,15 +14,22 @@ export default class extends React.Component {
     this.handleEmojiDropdownClick = this.handleEmojiDropdownClick.bind(this);
     this.handleEmojiClick = this.handleEmojiClick.bind(this);
   }
+
+  componentDidMount() {
+    console.log('this.props.message: ', this.props.message);
+  }
+
   toggleHover() {
     this.setState({ toggleHover: !this.state.toggleHover });
   }
+
   handleEmojiClick(emoji) {
     this.props.changeActiveEmoji(emoji);
     this.setState({
       showEmojisDropdown: !this.state.showEmojisDropdown,
     });
   }
+  
   handleEmojiDropdownClick() {
     if (this.props.activeUsername !== this.props.message.username) return;
     this.setState({ showEmojisDropdown: !this.state.showEmojisDropdown });
@@ -121,6 +128,22 @@ export default class extends React.Component {
           <div style={styles.message}>
             <p dangerouslySetInnerHTML={{ __html: message.text }} />
           </div>
+          {message.text.startsWith('@video-bot play ') &&
+            <div>
+              <embed
+                width="560"
+                height="315"
+                src={`https://www.youtube.com/embed/${message.text.replace('@video-bot play https://www.youtube.com/watch?v=', '')}`}
+              />
+            </div>
+          }
+          {message.text === '@video-bot help' &&
+            <div>
+              Available commands:<br />
+              @video-bot help: display list of commands<br />
+              @video-bot play (video_url): play a video (exclude parentheses around video_url)<br />
+            </div>
+          }
         </Container>
       </div>
     );
