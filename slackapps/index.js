@@ -4,7 +4,7 @@ const BodyClockApp = require('./BodyClockApp.js');
 const currentSlackAppNames = ['BODYCLOCK'];
 const slackApps = [BodyClockApp];
 
-const parseMessageForBotInvocation = (messageText) => {
+const parseMessageForBotInvocation = (messageText, username, workspaceId) => {
 
   // you're parseing the message for any '@appName' or '/appName'
   const wordsOfMessage = messageText.split(' ');
@@ -17,7 +17,7 @@ const parseMessageForBotInvocation = (messageText) => {
       const indexOfSlackApp = currentSlackAppNames.indexOf(adjustedWord);
       if (indexOfSlackApp >= 0) {
         // now time to send off to the relevant slackapp
-        slackApps[indexOfSlackApp].basicInvocation(messageText);
+        slackApps[indexOfSlackApp].triageBodyClockRequest(messageText, username, workspaceId);
       } else {
         return false;
       }

@@ -51,7 +51,7 @@ router.post('/signup', async (req, res) => {
     if (await db.getUser(req.body.username)) {
       return res.status(400).json('username exists');
     }
-    await auth.addUser(req.body.username, req.body.password, req.body.email, req.body.passwordHint);
+    await auth.addUser(req.body.username, req.body.password, req.body.email, req.body.passwordHint, req.body.clientTimezone);
     email.sendWelcomeEmail(req.body.username, req.body.email).then().catch();
     return res.sendStatus(200);
   } catch (err) {

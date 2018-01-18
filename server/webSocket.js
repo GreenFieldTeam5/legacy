@@ -102,7 +102,7 @@ const onMessage = async (ws, wss, data) => {
     */
       try {
         // check if the message received includes @appName for one of the slack apps we have running
-        SlackApps.parseMessageForBotInvocation(message.data.text);
+        //SlackApps.parseMessageForBotInvocation(message.data.text, message.data.username, message.data.workspaceId);
 
         // post the given message to the database
         let postedMessage = await db.postMessage(

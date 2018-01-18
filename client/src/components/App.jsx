@@ -29,6 +29,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log('Long hand: ', this.props.location);
+    console.log('Short hand: ', location);
     let server = location.origin.replace(/^http/, 'ws');
 
     // connect to the websocket server

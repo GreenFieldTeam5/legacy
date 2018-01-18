@@ -18,7 +18,7 @@ client
 // create tables needed by server
 const initializeDB = () => {
   // initialize tables by reading schema files and running as query
-  const schemas = ['/schema/users.sql', '/schema/workspaces.sql'];
+  const schemas = ['/schema/users.sql', '/schema/workspaces.sql', '/schema/bodyclocks.sql'];
   console.log('Is init db running');
   return Promise.all(schemas.map(schema =>
     new Promise((resolve, reject) => {
@@ -55,11 +55,17 @@ const getMessages = workspaceId =>
     .then(data => data.rows);
 
 // post new user to users table in database
-const createUser = (username, passhash, email, passhint) =>
+const createUser = (username, passhash, email, passhint, clientTimezone) =>
   client.query(
     'INSERT INTO users (username, password, email, password_hint) VALUES ($1, $2, $3, $4) RETURNING *',
     [username, passhash, email, passhint],
-  ).then(data => data.rows[0]);
+  ).then((data) => {
+    client.query("INSERT INTO bodyclocks (current_timezone, user_id) VALUES ($1, (SELECT id from users WHERE username= $2))", [clientTimezone, username])
+      .then(() => {
+        console.log('What is data: ', data);
+        return data.rows[0];
+      });
+  });
 
 // pull user info from users table in database
 const getUser = username =>
@@ -97,11 +103,7 @@ const getEmails = () => client.query('SELECT email FROM USERS')
   .then(data => data.rows);
 
 // create necessary tables if environment flag INITIALIZEDB is set to true
-
-console.log('process env', process.env.INITIALIZEDB);
-
 if (process.env.INITIALIZEDB) {
-  console.log('Does this run tho')
   initializeDB()
     .then()
     .catch(err => console.error('error creating database tables, ', err.stack));
