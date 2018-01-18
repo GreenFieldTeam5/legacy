@@ -92,7 +92,7 @@ export default class extends React.Component {
         padding: '5px',
         paddingBottom: '0',
         marginLeft: '75px',
-        display: 'block',
+        bottom: '75px',
         position: 'absolute',
         width: '600px',
         boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
@@ -113,6 +113,8 @@ export default class extends React.Component {
             <div style={styles.proPic} onClick={this.handleEmojiDropdownClick}>
               <i style={styles.proPic} className={`em ${message.username === this.props.activeUsername ? this.props.activeEmoji : 'em-stuck_out_tongue_winking_eye'}`}></i>
             </div>
+          </Media>
+          <div style={{ position: 'relative' }}>
             {this.state.showEmojisDropdown &&
               <div style={styles.emojiDropdownContent} className="emoji-dropdown-content">
                 {TextEmojis.map(emoji => (
@@ -120,7 +122,7 @@ export default class extends React.Component {
                 ))}
               </div>
             }
-          </Media>
+          </div>
           <span style={styles.username}>
             {message.username}
             <span style={styles.timeStamp}>{new Date(message.createdAt).toLocaleTimeString()}</span>
