@@ -29,7 +29,6 @@
 
 /* send message div container */
 .input-container {
-  height: 25vh;
   margin-left: 17%;
   margin-top: 10px;
 }
@@ -37,7 +36,10 @@
 /* bootstrap form control class
    send message */
 .message-input-box {
-  height: 50%;
+  width: 500px;
+  position: absolute;
+  top: 725px;
+  max-height: 175px;
 }
 
 .message-entry-container {
