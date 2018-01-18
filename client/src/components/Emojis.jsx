@@ -51,7 +51,7 @@ export default class Emojis extends React.Component {
   render() {
     return (
       <Container style={this.styles.body}>
-        HI CAT WAS HERE. CLICK EMOJI FACE TO CHOOSE YOUR EMOJI!
+        CLICK EMOJI FACE TO CHOOSE YOUR EMOJI!
         <div className="emoji-dropdown-button">
           <img
             src={`emoji/${  this.state.activeEmoji}`}
