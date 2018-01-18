@@ -13,7 +13,7 @@ const response = (code, message, method, data) =>
 
 const convert24HourClockToCircadian = (timeString) => {
   let timeStringArray = timeWhereTheyAre.split(':');
-    let hour = timeStringArray[0]
+  let hour = timeStringArray[0]
 }
 
 const displayWorkspaceBodyClocks = async (messageText, username, workspaceId, ws, wss) => {
