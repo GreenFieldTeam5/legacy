@@ -34,6 +34,7 @@ export default class Body extends React.Component {
             <MessageList
               messages={messages}
               currentWorkSpaceId={currentWorkSpaceId}
+              activeUsername={this.props.activeUsername}
             />
           </Col>
         </Row>

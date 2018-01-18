@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Media } from 'reactstrap';
-import { EmojisList } from './EmojisList';
+import { TextEmojis } from './TextEmojis';
 
 // Individual message container
 export default class extends React.Component {
@@ -14,15 +14,22 @@ export default class extends React.Component {
     this.handleEmojiDropdownClick = this.handleEmojiDropdownClick.bind(this);
     this.handleEmojiClick = this.handleEmojiClick.bind(this);
   }
+
+  componentDidMount() {
+    console.log('this.props.message: ', this.props.message);
+  }
+
   toggleHover() {
     this.setState({ toggleHover: !this.state.toggleHover });
   }
+
   handleEmojiClick(emoji) {
     this.props.changeActiveEmoji(emoji);
     this.setState({
       showEmojisDropdown: !this.state.showEmojisDropdown,
     });
   }
+  
   handleEmojiDropdownClick() {
     if (this.props.activeUsername !== this.props.message.username) return;
     this.setState({ showEmojisDropdown: !this.state.showEmojisDropdown });
@@ -55,7 +62,6 @@ export default class extends React.Component {
     const styles = {
       body: {
         padding: '15px 0 15px 0',
-        display: 'flex',
       },
       timeStamp: {
         fontSize: '10px',
@@ -88,11 +94,15 @@ export default class extends React.Component {
         marginLeft: '75px',
         display: 'block',
         position: 'absolute',
-        width: '300px',
+        width: '600px',
         boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
         zIndex: '1',
         maxHeight: '150px',
         overflowX: 'auto',
+      },
+      proPic: {
+        height: '48px',
+        width: '48px',
       },
     };
 
@@ -100,22 +110,13 @@ export default class extends React.Component {
       <div className="message-entry-container">
         <Container style={styles.body}>
           <Media>
-            <img
-              className="egg img-responsive"
-              src={`emoji/${message.username === this.props.activeUsername ? this.props.activeEmoji : 'stuck_out_tongue.png'}`}
-              style={styles.egg}
-              onClick={this.handleEmojiDropdownClick}
-            />
+            <div style={styles.proPic} onClick={this.handleEmojiDropdownClick}>
+              <i style={styles.proPic} className={`em ${message.username === this.props.activeUsername ? this.props.activeEmoji : 'em-stuck_out_tongue_winking_eye'}`}></i>
+            </div>
             {this.state.showEmojisDropdown &&
               <div style={styles.emojiDropdownContent} className="emoji-dropdown-content">
-                {EmojisList.map(emoji => (
-                  <img
-                    key={emoji}
-                    src={`emoji/${emoji}`}
-                    height="32px"
-                    width="32px"
-                    onClick={() => this.handleEmojiClick(emoji)}
-                  />
+                {TextEmojis.map(emoji => (
+                  <i key={emoji} className={`em ${emoji}`} onClick={() => this.handleEmojiClick(emoji)}></i>
                 ))}
               </div>
             }
@@ -124,7 +125,25 @@ export default class extends React.Component {
             {message.username}
             <span style={styles.timeStamp}>{new Date(message.createdAt).toLocaleTimeString()}</span>
           </span>
-          <div style={styles.message}>{message.text}</div>
+          <div style={styles.message}>
+            <p dangerouslySetInnerHTML={{ __html: message.text }} />
+          </div>
+          {message.text.startsWith('@video-bot play ') &&
+            <div>
+              <embed
+                width="560"
+                height="315"
+                src={`https://www.youtube.com/embed/${message.text.replace('@video-bot play https://www.youtube.com/watch?v=', '')}`}
+              />
+            </div>
+          }
+          {message.text === '@video-bot help' &&
+            <div>
+              Available commands:<br />
+              @video-bot help: display list of commands<br />
+              @video-bot play (video_url): play a video (exclude parentheses around video_url)<br />
+            </div>
+          }
         </Container>
       </div>
     );
