@@ -21,7 +21,7 @@ client
 // create tables needed by server
 const initializeDB = () => {
   // initialize tables by reading schema files and running as query
-  const schemas = ['/schema/users.sql', '/schema/workspaces.sql'];
+  const schemas = ['/schema/users.sql', '/schema/workspaces.sql', '/schema/slackbot.sql'];
   console.log('Is init db running');
   return Promise.all(schemas.map(schema =>
     new Promise((resolve, reject) => {

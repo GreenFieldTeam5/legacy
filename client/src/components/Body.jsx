@@ -4,7 +4,7 @@ import MessageList from './MessageList.jsx';
 import WorkSpaceList from './WorkSpaceList.jsx';
 import PropTypes from 'prop-types';
 
-//container for other containers
+// container for other containers
 export default class Body extends React.Component {
   constructor(props) {
     super(props);
@@ -46,4 +46,4 @@ Body.propTypes = {
   messages: PropTypes.array,
   workspaces: PropTypes.array,
   currentWorkSpaceId: PropTypes.number,
-}
+};

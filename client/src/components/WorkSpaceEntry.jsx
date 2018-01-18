@@ -41,4 +41,5 @@ export default class WorkSpaceEntry extends Component {
 
 WorkSpaceEntry.propTypes = {
   currentWorkSpaceId: PropTypes.number,
-}
+};
+
