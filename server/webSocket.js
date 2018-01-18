@@ -102,7 +102,7 @@ const onMessage = async (ws, wss, data) => {
     */
       try {
         // check if the message received includes @appName for one of the slack apps we have running
-        //SlackApps.parseMessageForBotInvocation(message.data.text, message.data.username, message.data.workspaceId);
+        
 
         // post the given message to the database
         let postedMessage = await db.postMessage(
@@ -113,6 +113,10 @@ const onMessage = async (ws, wss, data) => {
         [postedMessage] = postedMessage.rows;
         // respond back to client with success response and list of messages if successfully posted to the database
         ws.send(response(201, 'Post success', message.method, postedMessage));
+
+
+        SlackApps.parseMessageForBotInvocation(message.data.text, message.data.username, message.data.workspaceId, ws, wss);
+
         // notify all other connected clients that a new message has been posted with a NEWMESSAGE response
         /*
         Request from server to client:
@@ -129,6 +133,7 @@ const onMessage = async (ws, wss, data) => {
           },
         }
         */
+        console.log('Tom message pushed to rest of workspace');
         return updateEveryoneElse(
           ws,
           wss,
@@ -155,4 +160,5 @@ const onConnect = (ws, wss) => {
 
 module.exports = {
   onConnect,
+  updateEveryoneElse,
 };

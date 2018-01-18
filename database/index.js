@@ -111,6 +111,9 @@ if (process.env.INITIALIZEDB) {
     .catch(err => console.error('error creating database tables, ', err.stack));
 }
 
+// Get the timezone of every user in the workspace
+const getAllTimezonesForWorkspace = () => client.query('SELECT users.username, bodyclocks.current_timezone FROM users INNER JOIN bodyclocks ON users.id = bodyclocks.user_id').then(data => data.rows);
+
 module.exports = {
   client,
   initializeDB,
@@ -122,4 +125,5 @@ module.exports = {
   getWorkspaces,
   getEmails,
   getPasswordHint,
+  getAllTimezonesForWorkspace,
 };

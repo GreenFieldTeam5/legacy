@@ -1,24 +1,51 @@
+const db = require('../database');
+const socketHelpers = require('../server/webSocket.js');
 
-const displayWorkspaceBodyClocks = (messageText, username, workspaceId) => {
+const response = (code, message, method, data) =>
+  JSON.stringify({
+    code,
+    message,
+    method,
+    data,
+  });
+
+const displayWorkspaceBodyClocks = async (messageText, username, workspaceId, ws, wss) => {
+
+  let timezonesStringArray = ['These are the timezones of people in here:'];
+
+  // get the timezones of everyone in the workspace
+  let timezones = await db.getAllTimezonesForWorkspace();
+  timezones.forEach(dbResult => timezonesStringArray.push(`(${dbResult.username}, ${dbResult.current_timezone})`));
+
+  const timezoneReplyString = timezonesStringArray.join(' ');
+
+  // post the given message to the database
+  let postedMessage = await db.postMessage(
+    timezoneReplyString,
+    'BodyClock',
+    workspaceId,
+  );
+  [postedMessage] = postedMessage.rows;
+  // respond back to client with success response and list of messages if successfully posted to the database
+  ws.send(response(201, 'Post success', 'POSTMESSAGE', postedMessage));
+  return socketHelpers.updateEveryoneElse(
+    ws,
+    wss,
+    response(200, 'New message', 'NEWMESSAGE', {
+      message: postedMessage,
+      workspaceId: workspaceId,
+    }),
+  );
+};
+
+const displaySpecificBodyClocks = (messageText, username, workspaceId, ws, wss) => {
 
 };
 
-const displaySpecificBodyClocks = (messageText, username, workspaceId) => {
+const triageBodyClockRequest = (messageText, username, workspaceId, ws, wss) => {
 
-};
-
-const triageBodyClockRequest = (messageText, username, workspaceId) => {
-
-  // splice the first word off - we're done with that part now we're successfully routed to BodyClockApp.js
-  const messageString = messageText.split(' ').slice(1).join(' ');
-
-  if (messageString.includes('@')) {
-    // advanced case -- query specific users within the workspace
-    displaySpecificBodyClocks(messageText, username, workspaceId);
-  } else {
-    // basic case -- time of day, and time of circadian rhythm for everyone in the workspace
-    displayWorkspaceBodyClocks(messageText, username, workspaceId);
-  }
+  
+  displayWorkspaceBodyClocks(messageText, username, workspaceId, ws, wss);
 
   return true;
 };
