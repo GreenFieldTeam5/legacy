@@ -5,15 +5,15 @@ import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
 
-//The main component of the App. Renders the core functionality of the project.
+// The main component of the App. Renders the core functionality of the project.
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      //Default message informs the user to select a workspace
+      // Default message informs the user to select a workspace
       messages: [
         {
-          text: 'Welcome to slackk-casa! Please select or create a workspace!',
+          text: 'Type /remind to set yourself a quick reminder',
           username: 'Slack-bot',
           id: 0,
           createdAt: new Date(),
@@ -25,6 +25,7 @@ export default class App extends React.Component {
       query: '',
       currentWorkSpaceId: 0,
       currentWorkSpaceName: '',
+      slackBot: []
     };
   }
 
@@ -61,10 +62,8 @@ export default class App extends React.Component {
         query: '',
       });
     }
-
-
   }
-  //grabs all existing workspaces
+  // grabs all existing workspaces
   loadWorkSpaces() {
     fetch('/workspaces')
       .then(resp => resp.json())
@@ -72,15 +71,19 @@ export default class App extends React.Component {
       .catch(console.error);
   }
 
-  //Helper function to reassign current workspace
+  // Helper function to reassign current workspace
   changeCurrentWorkSpace(id, name) {
     this.setState({ currentWorkSpaceId: id, currentWorkSpaceName: name });
   }
-  //renders nav bar, body(which contains all message components other than input), and message input
+  // renders nav bar, body(which contains all message components other than input), and message input
   render() {
     let {
       messages, query, workSpaces, currentWorkSpaceId, currentWorkSpaceName,
     } = this.state;
+
+    var placeholder = (currentWorkSpaceId === 0) ? 
+      `Slack-Bot at your service!` : `Message #${currentWorkSpaceName} || 'select a workspace!'`;
+
     return (
       <div className="app-container">
         <NavBar currentWorkSpaceName={currentWorkSpaceName} />
@@ -88,6 +91,7 @@ export default class App extends React.Component {
           messages={messages}
           workSpaces={workSpaces}
           loadWorkSpaces={() => this.loadWorkSpaces()}
+          loadSlackBot={() => this.loadSlackBot()}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
         />
@@ -97,7 +101,7 @@ export default class App extends React.Component {
             className="message-input-box"
             type="textarea"
             name="text"
-            placeholder={`Message #${currentWorkSpaceName || 'select a workspace!'}`}
+            placeholder={placeholder}
             onChange={event => this.handleChange(event)}
             onKeyPress={event => this.handleKeyPress(event)}
           />

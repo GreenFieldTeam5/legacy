@@ -1,5 +1,7 @@
 const BodyClockApp = require('./BodyClockApp.js');
+const reminderBotApp = require('./ReminderApp.js');
 
+// Line 104-105 webSocket.js
 
 const currentSlackAppNames = ['BODYCLOCK'];
 const slackApps = [BodyClockApp];
@@ -23,9 +25,11 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
     }
   }
   // if no bot invoked simply return false
+  console.log(messageText);
   return false;
 };
 
 module.exports = {
   parseMessageForBotInvocation,
 };
+
