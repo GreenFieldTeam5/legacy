@@ -6,6 +6,7 @@
 
 # Icon must end with two \r
 Icon
+personal-notes/
 
 # Thumbnails
 ._*
@@ -91,3 +92,4 @@ package-lock.json
 
 # webpack
 client/dist/bundle.js
+Icon

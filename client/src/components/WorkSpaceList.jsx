@@ -18,6 +18,21 @@ export default class WorkSpaceList extends Component {
     this.createWorkSpace = this.createWorkSpace.bind(this);
   }
 
+  componentDidMount() {
+    /* Still researching how to not attempt to create workspace if it already exists
+    let { loadWorkSpaces } = this.props;
+    let { workSpaceQuery, createFail } = this.state;
+    this.setState({ createFail: false });
+    fetch('/workspaces', {
+      method: 'POST',
+      body: JSON.stringify({ name: 'video-bot' }),
+      headers: { 'content-type': 'application/json' },
+    })
+      .then(resp => (resp.status === 201 ? loadWorkSpaces() : this.setState({ createFail: true })))
+      .catch(console.error);
+    */
+  }
+
   //grabs the value from the input field
   getWorkSpaceQuery(query) {
     this.setState({ workSpaceQuery: query });
