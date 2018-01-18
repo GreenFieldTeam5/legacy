@@ -5,8 +5,9 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
+
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'slack-casa',
   ssl: false,
 });
 
@@ -98,6 +99,9 @@ const getWorkspaces = () => client.query('SELECT * FROM workspaces').then(data =
 const getEmails = () => client.query('SELECT email FROM USERS')
   .then(data => data.rows);
 
+// get all info from slack-bot messages
+const getSlackBotWorkspace = () => client.query('SELECT * from slackbot').then(data => data.rows);
+
 // create necessary tables if environment flag INITIALIZEDB is set to true
 
 console.log('process env', process.env.INITIALIZEDB);
@@ -120,4 +124,5 @@ module.exports = {
   getWorkspaces,
   getEmails,
   getPasswordHint,
+  getSlackBotWorkspace
 };

@@ -1,4 +1,3 @@
-const CronJob = require('cron').CronJob;
 const nodemailer = require('nodemailer');
 
 // settings used for nodemailer

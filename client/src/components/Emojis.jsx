@@ -27,7 +27,7 @@ export default class Emojis extends React.Component {
         zIndex: '1',
         maxHeight: '150px',
         overflowX: 'hidden',
-        overflowX: 'auto', 
+        overflowX: 'auto',
       },
     };
     this.state = {
@@ -42,19 +42,19 @@ export default class Emojis extends React.Component {
     this.setState({ showEmojisDropdown: !this.state.showEmojisDropdown });
   }
   handleEmojiClick(emoji) {
-    this.setState({ 
+    this.setState({
       activeEmoji: emoji,
       showEmojisDropdown: !this.state.showEmojisDropdown,
     });
   }
 
-  render () {
+  render() {
     return (
       <Container style={this.styles.body}>
-        HI CAT WAS HERE. CLICK EMOJI FACE TO CHOOSE YOUR EMOJI!
+        CLICK EMOJI FACE TO CHOOSE YOUR EMOJI!
         <div className="emoji-dropdown-button">
           <img
-            src={'emoji/' + this.state.activeEmoji}
+            src={`emoji/${  this.state.activeEmoji}`}
             onClick={this.handleEmojiDropdownClick}
           />
         </div>
@@ -63,7 +63,7 @@ export default class Emojis extends React.Component {
             {EmojisList.map(emoji => (
               <img
                 key={emoji}
-                src={'emoji/' + emoji}
+                src={`emoji/${  emoji}`}
                 height="32px"
                 width="32px"
                 onClick={() => this.handleEmojiClick(emoji)}
@@ -74,6 +74,5 @@ export default class Emojis extends React.Component {
       </Container>
     );
   }
-};
-
+}
 
