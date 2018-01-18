@@ -4,6 +4,7 @@
 .LSOverride
 .env
 personal-notes
+client/dist/emoji
 
 # Icon must end with two \r
 Icon
