@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Row, Col } from 'reactstrap';
 import WorkSpaceEntry from './WorkSpaceEntry.jsx';
+import SlackBotWorkSpaceEntry from './SlackBotWorkSpaceEntry.jsx';
 import CreateWorkSpace from './CreateWorkSpace.jsx';
 import PropTypes from 'prop-types';
 
@@ -60,6 +61,14 @@ export default class WorkSpaceList extends Component {
           </Col>
         </Row>
         {workSpaces.map(workSpace => (
+          (workSpace.id === 0) ?
+          <SlackBotWorkSpaceEntry
+            workSpace={workSpace}
+            handleFail={() => this.handleFail}
+            key={0}
+            changeCurrentWorkSpace={changeCurrentWorkSpace}
+            currentWorkSpaceId={currentWorkSpaceId}
+          /> :
           <WorkSpaceEntry
             workSpace={workSpace}
             handleFail={() => this.handleFail}

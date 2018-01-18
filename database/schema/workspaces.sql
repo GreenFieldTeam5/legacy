@@ -17,4 +17,5 @@
   OIDS=FALSE
 );
 
-INSERT INTO workspaces (id, name, db_name) VALUES (0, 'slack-bot', 'ws_slackbot');
+INSERT INTO workspaces (id, name, db_name) VALUES (0, 'slack-bot', 'ws_slackbot') ON CONFLICT (id) DO UPDATE 
+SET id = 0;
