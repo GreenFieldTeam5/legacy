@@ -2,9 +2,11 @@
 *.DS_Store
 .AppleDouble
 .LSOverride
+.env
 
 # Icon must end with two \r
-Icon
+Icon
+personal-notes/
 
 # Thumbnails
 ._*
@@ -90,4 +92,4 @@ package-lock.json
 
 # webpack
 client/dist/bundle.js
-Icon
+Icon

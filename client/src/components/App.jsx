@@ -64,8 +64,6 @@ export default class App extends React.Component {
         query: '',
       });
     }
-
-
   }
   // grabs all existing workspaces
   loadWorkSpaces() {
