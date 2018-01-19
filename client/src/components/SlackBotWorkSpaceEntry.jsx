@@ -12,7 +12,7 @@ export default class SlackBotWorkSpaceEntry extends Component {
   handleClick(event) {
     let { handleFail, changeCurrentWorkSpace, workSpace } = this.props;
     handleFail();
-    // getWorkSpaceMessagesFromServer(workSpace.id);
+    getWorkSpaceMessagesFromServer(workSpace.id);
     changeCurrentWorkSpace(workSpace.id, workSpace.name);
   }
 

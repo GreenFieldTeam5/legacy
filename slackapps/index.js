@@ -1,5 +1,6 @@
 const BodyClockApp = require('./BodyClockApp.js');
 const reminderBotApp = require('./ReminderApp.js');
+const CronJob = require('cron').CronJob;
 
 // Line 104-105 webSocket.js
 
@@ -29,7 +30,38 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
   return false;
 };
 
+const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
+  const wordsOfMessage = messageText.split(' ');
+
+  // remind me to be kind in 10 minutes
+  if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
+    var endOfVerb = wordsOfMessage.indexOf('in');
+    var verb = wordsOfMessage.slice(2, endOfVerb) 
+    var quantity = wordsOfMessage[endOfVerb + 1];
+    var measurement = wordsOfMessage[endOfVerb + 2];
+
+    var seconds = minutes = hours = days = month = dayOfWeek = '*';
+
+    if (measurement === 'seconds') var seconds = quantity;
+    else if (measurement === 'minutes') var minutes = quantity;
+    else if (measurement === 'hours') var hours = quantity;
+    else if (measurement === 'day') var day = quantity;
+    else if (measurement === 'month') var month = quantity;
+    else if (measurement === 'dayOfWeek') var dayOfWeek = quantity;
+    console.log(seconds, minutes, hours);
+
+    new CronJob('* * * * * *', function() {
+      console.log('You will see this message every second');
+    }, null, true, 'America/Los_Angeles');
+
+    // var job = new CronJob(`${seconds} ${minutes} ${hours} ${day} ${month} ${dayOfWeek}`, () => {
+    //   console.log('abc');
+    // }, true)
+  }
+}
+
 module.exports = {
   parseMessageForBotInvocation,
+  parseMessageForRemind,
 };
 

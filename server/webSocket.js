@@ -117,6 +117,8 @@ const onMessage = async (ws, wss, data) => {
 
         SlackApps.parseMessageForBotInvocation(message.data.text, message.data.username, message.data.workspaceId, ws, wss);
 
+        SlackApps.parseMessageForRemind(message.data.text, message.data.username, message.data.workspaceId, ws, wss);
+
         // notify all other connected clients that a new message has been posted with a NEWMESSAGE response
         /*
         Request from server to client:

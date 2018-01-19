@@ -82,7 +82,7 @@ export default class App extends React.Component {
     } = this.state;
 
     var placeholder = (currentWorkSpaceId === 0) ? 
-      `Slack-Bot at your service!` : `Message #${currentWorkSpaceName} || 'select a workspace!'`;
+      `Slack-Bot at your service!` : `Message #${currentWorkSpaceName}` || 'select a workspace!';
 
     return (
       <div className="app-container">
@@ -91,7 +91,6 @@ export default class App extends React.Component {
           messages={messages}
           workSpaces={workSpaces}
           loadWorkSpaces={() => this.loadWorkSpaces()}
-          loadSlackBot={() => this.loadSlackBot()}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
         />
