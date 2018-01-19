@@ -4,6 +4,7 @@ import { Input } from 'reactstrap';
 import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
+import { TextEmojis } from './TextEmojis';
 
 // The main component of the App. Renders the core functionality of the project.
 export default class App extends React.Component {
@@ -25,8 +26,11 @@ export default class App extends React.Component {
       query: '',
       currentWorkSpaceId: 0,
       currentWorkSpaceName: '',
-      slackBot: []
+      showEmojisDropdown: false,
     };
+
+    this.handleEmojiDropdownClick = this.handleEmojiDropdownClick.bind(this);
+    this.handleEmojiClick = this.handleEmojiClick.bind(this);
   }
 
   componentDidMount() {
@@ -72,6 +76,17 @@ export default class App extends React.Component {
   changeCurrentWorkSpace(id, name) {
     this.setState({ currentWorkSpaceId: id, currentWorkSpaceName: name });
   }
+
+  handleEmojiDropdownClick() {
+    this.setState({ showEmojisDropdown: !this.state.showEmojisDropdown });
+  }
+  handleEmojiClick(emoji) {
+    this.setState({
+      query: `${this.state.query} <i class="em ${emoji}"></i> `,
+      showEmojisDropdown: !this.state.showEmojisDropdown,
+    });
+  }
+
   // renders nav bar, body(which contains all message components other than input), and message input
   render() {
     let {
@@ -81,6 +96,23 @@ export default class App extends React.Component {
     var placeholder = (currentWorkSpaceId === 0) ? 
       `Slack-Bot at your service!` : `Message #${currentWorkSpaceName}` || 'select a workspace!';
 
+    const styles = {
+      emojiDropdownContent: {
+        backgroundColor: 'Snow',
+        border: 'solid black',
+        padding: '5px',
+        paddingBottom: '0',
+        position: 'absolute',
+        marginLeft: '125px',
+        bottom: '25px',
+        margin: 'auto',
+        width: '600px',
+        boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
+        zIndex: '1',
+        maxHeight: '150px',
+        overflowX: 'auto',
+      },
+    };
     return (
       <div className="app-container">
         <NavBar currentWorkSpaceName={currentWorkSpaceName} />
@@ -90,17 +122,32 @@ export default class App extends React.Component {
           loadWorkSpaces={() => this.loadWorkSpaces()}
           changeCurrentWorkSpace={(id, name) => this.changeCurrentWorkSpace(id, name)}
           currentWorkSpaceId={currentWorkSpaceId}
+          activeUsername={this.props.location.state.username}
         />
+        <div style={{ marginLeft: '150px', position: 'relative' }}>
+          {this.state.showEmojisDropdown &&
+            <div style={styles.emojiDropdownContent} className="emoji-dropdown-content">
+              {TextEmojis.map(emoji => (
+                <i key={emoji} className={`em ${emoji}`} onClick={() => this.handleEmojiClick(emoji)}></i>
+              ))}
+            </div>
+          }
+        </div>
         <div className="input-container">
-          <Input
-            value={query}
-            className="message-input-box"
-            type="textarea"
-            name="text"
-            placeholder={placeholder}
-            onChange={event => this.handleChange(event)}
-            onKeyPress={event => this.handleKeyPress(event)}
-          />
+          <div style={{ display: 'flex' }}>
+            <div onClick={this.handleEmojiDropdownClick}>
+              <i className="em em-stuck_out_tongue"></i>
+            </div>
+            <Input
+              value={query}
+              className="message-input-box"
+              type="textarea"
+              name="text"
+              placeholder={placeholder}
+              onChange={event => this.handleChange(event)}
+              onKeyPress={event => this.handleKeyPress(event)}
+            />
+          </div>
         </div>
       </div>
     );
