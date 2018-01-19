@@ -135,7 +135,6 @@ const onMessage = async (ws, wss, data) => {
           },
         }
         */
-        console.log('Tom message pushed to rest of workspace');
         return updateEveryoneElse(
           ws,
           wss,

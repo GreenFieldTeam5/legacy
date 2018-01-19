@@ -28,7 +28,7 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
     }
   }
   // if no bot invoked simply return false
-  console.log(messageText);
+  // console.log(messageText);
   return false;
 };
 
@@ -39,20 +39,12 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
   if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
     var endOfVerb = wordsOfMessage.indexOf('in');
     var verb = wordsOfMessage.slice(3, endOfVerb) 
-    var quantity = wordsOfMessage[endOfVerb + 1];
+    var quantity = parseInt(wordsOfMessage[endOfVerb + 1]);
     var measurement = wordsOfMessage[endOfVerb + 2];
 
     var seconds = minutes = hours = days = month = dayOfWeek = '*';
 
     var triggerTime = helpers.getTriggerTime(quantity, measurement);
-
-    console.log('number parsed');
-    console.log('triggerTime', triggerTime)
-    // var timeNow = new Date();
-    // console.log('timeNow: ', timeNow);
-    // console.log('seconds: ', timeNow.getSeconds());
-    // var triggerTime = new Date(timeNow.setSeconds(timeNow.getSeconds() + 5));
-    // console.log('triggerTime: ', triggerTime);
 
     try {
       new CronJob(triggerTime, function() {
