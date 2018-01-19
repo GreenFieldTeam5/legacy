@@ -1,4 +1,3 @@
-const CronJob = require('cron').CronJob;
 const nodemailer = require('nodemailer');
 
 // settings used for nodemailer
@@ -18,7 +17,7 @@ const sendWelcomeEmail = async (username, email) => {
     const message = {
       from: `${process.env.EMAIL_USERNAME}`,
       to: email,
-      subject: `Welcome to slackk-casa, ${username}!`,
+      subject: `Email`,
       text: 'Thanks for joining slackk-casa! We hope you have a great time using our service!',
     };
     return await transporter.sendMail(message);

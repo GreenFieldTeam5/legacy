@@ -4,7 +4,7 @@ import MessageList from './MessageList.jsx';
 import WorkSpaceList from './WorkSpaceList.jsx';
 import PropTypes from 'prop-types';
 
-//container for other containers
+// container for other containers
 export default class Body extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +15,7 @@ export default class Body extends React.Component {
     let {
       workSpaces,
       messages,
+      loadSlackBot,
       loadWorkSpaces,
       changeCurrentWorkSpace,
       currentWorkSpaceId,
@@ -26,6 +27,7 @@ export default class Body extends React.Component {
             <WorkSpaceList
               workSpaces={workSpaces}
               loadWorkSpaces={loadWorkSpaces}
+              loadSlackBot={loadSlackBot}
               changeCurrentWorkSpace={changeCurrentWorkSpace}
               currentWorkSpaceId={currentWorkSpaceId}
             />
@@ -47,4 +49,4 @@ Body.propTypes = {
   messages: PropTypes.array,
   workspaces: PropTypes.array,
   currentWorkSpaceId: PropTypes.number,
-}
+};

@@ -98,7 +98,6 @@ const connect = (server, component) => {
   app = component;
   // on connection run the callback
   ws.addEventListener('open', () => {
-    console.log('Connected to the server');
     // sets state to current socket session for App methods to have access
     app.setState({ ws });
 

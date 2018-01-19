@@ -17,6 +17,7 @@ export default class CreateWorkSpace extends React.Component {
       popoverOpen: !this.state.popoverOpen,
     });
   }
+
   //calls workspace creation then pops back down
   handleClick() {
     this.props.createWorkSpace();

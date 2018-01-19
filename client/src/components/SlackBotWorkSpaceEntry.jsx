@@ -3,7 +3,7 @@ import { Button } from 'reactstrap';
 import { getWorkSpaceMessagesFromServer } from '../socketHelpers/index.js';
 import PropTypes from 'prop-types';
 
-export default class WorkSpaceEntry extends Component {
+export default class SlackBotWorkSpaceEntry extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -25,13 +25,12 @@ export default class WorkSpaceEntry extends Component {
             className="workSpace-name highlight-workSpace"
             onClick={event => this.handleClick(event)}
           >
-            {' '}
-            # {workSpace.name}
+            {workSpace.name}
           </h5>
         ) : (
           <h5 className="workSpace-name workSpace-hover" onClick={event => this.handleClick(event)}>
             {' '}
-            # {workSpace.name}
+            {workSpace.name}
           </h5>
         )}
       </div>
@@ -39,7 +38,8 @@ export default class WorkSpaceEntry extends Component {
   }
 }
 
-WorkSpaceEntry.propTypes = {
+SlackBotWorkSpaceEntry.propTypes = {
   currentWorkSpaceId: PropTypes.number,
 };
+
 

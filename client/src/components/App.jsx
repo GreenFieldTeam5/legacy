@@ -14,7 +14,7 @@ export default class App extends React.Component {
       // Default message informs the user to select a workspace
       messages: [
         {
-          text: 'Welcome to slackk-casa! Please select or create a workspace!',
+          text: 'Type /remind to set yourself a quick reminder',
           username: 'Slack-bot',
           id: 0,
           createdAt: new Date(),
@@ -53,7 +53,6 @@ export default class App extends React.Component {
     // on key press enter send message and reset text box
     if (event.charCode === 13 && !event.shiftKey) {
       event.preventDefault();
-      console.log(this.props);
       sendMessage({
         username: this.props.location.state.username,
         text: this.state.query,
@@ -93,6 +92,10 @@ export default class App extends React.Component {
     let {
       messages, query, workSpaces, currentWorkSpaceId, currentWorkSpaceName,
     } = this.state;
+
+    var placeholder = (currentWorkSpaceId === 0) ? 
+      `Slack-Bot at your service!` : `Message #${currentWorkSpaceName}` || 'select a workspace!';
+
     const styles = {
       emojiDropdownContent: {
         backgroundColor: 'Snow',
@@ -140,7 +143,7 @@ export default class App extends React.Component {
               className="message-input-box"
               type="textarea"
               name="text"
-              placeholder={`Message #${currentWorkSpaceName || 'select a workspace!'}`}
+              placeholder={placeholder}
               onChange={event => this.handleChange(event)}
               onKeyPress={event => this.handleKeyPress(event)}
             />
