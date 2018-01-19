@@ -99,10 +99,10 @@ export default class App extends React.Component {
         border: 'solid black',
         padding: '5px',
         paddingBottom: '0',
-        display: 'block',
         position: 'absolute',
+        marginLeft: '125px',
+        bottom: '25px',
         margin: 'auto',
-        top: '550px',
         width: '600px',
         boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)',
         zIndex: '1',
@@ -121,7 +121,7 @@ export default class App extends React.Component {
           currentWorkSpaceId={currentWorkSpaceId}
           activeUsername={this.props.location.state.username}
         />
-        <div style={{ marginLeft: '150px' }}>
+        <div style={{ marginLeft: '150px', position: 'relative' }}>
           {this.state.showEmojisDropdown &&
             <div style={styles.emojiDropdownContent} className="emoji-dropdown-content">
               {TextEmojis.map(emoji => (

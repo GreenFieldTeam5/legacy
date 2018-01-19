@@ -36,9 +36,8 @@
 /* bootstrap form control class
    send message */
 .message-input-box {
+  position: relative;
   width: 500px;
-  position: absolute;
-  top: 725px;
   max-height: 175px;
 }
 
