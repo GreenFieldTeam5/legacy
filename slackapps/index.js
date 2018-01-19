@@ -42,8 +42,6 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
     var quantity = parseInt(wordsOfMessage[endOfVerb + 1]);
     var measurement = wordsOfMessage[endOfVerb + 2];
 
-    var seconds = minutes = hours = days = month = dayOfWeek = '*';
-
     var triggerTime = helpers.getTriggerTime(quantity, measurement);
 
     try {
