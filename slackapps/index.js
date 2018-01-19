@@ -1,6 +1,8 @@
 const BodyClockApp = require('./BodyClockApp.js');
 const reminderBotApp = require('./ReminderApp.js');
 const CronJob = require('cron').CronJob;
+const helpers = require('./helpers.js');
+const Moment = require('moment');
 
 // Line 104-105 webSocket.js
 
@@ -36,27 +38,29 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
   // remind me to be kind in 10 minutes
   if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
     var endOfVerb = wordsOfMessage.indexOf('in');
-    var verb = wordsOfMessage.slice(2, endOfVerb) 
+    var verb = wordsOfMessage.slice(3, endOfVerb) 
     var quantity = wordsOfMessage[endOfVerb + 1];
     var measurement = wordsOfMessage[endOfVerb + 2];
 
     var seconds = minutes = hours = days = month = dayOfWeek = '*';
 
-    if (measurement === 'seconds') var seconds = quantity;
-    else if (measurement === 'minutes') var minutes = quantity;
-    else if (measurement === 'hours') var hours = quantity;
-    else if (measurement === 'day') var day = quantity;
-    else if (measurement === 'month') var month = quantity;
-    else if (measurement === 'dayOfWeek') var dayOfWeek = quantity;
-    console.log(seconds, minutes, hours);
+    var triggerTime = helpers.getTriggerTime(quantity, measurement);
 
-    new CronJob('* * * * * *', function() {
-      console.log('You will see this message every second');
-    }, null, true, 'America/Los_Angeles');
+    console.log('number parsed');
+    console.log('triggerTime', triggerTime)
+    // var timeNow = new Date();
+    // console.log('timeNow: ', timeNow);
+    // console.log('seconds: ', timeNow.getSeconds());
+    // var triggerTime = new Date(timeNow.setSeconds(timeNow.getSeconds() + 5));
+    // console.log('triggerTime: ', triggerTime);
 
-    // var job = new CronJob(`${seconds} ${minutes} ${hours} ${day} ${month} ${dayOfWeek}`, () => {
-    //   console.log('abc');
-    // }, true)
+    try {
+      new CronJob(triggerTime, function() {
+        console.log(verb.join(' '));
+      }, null, true, 'America/Los_Angeles');
+    } catch(ex) {
+      console.log("cron pattern not valid");
+    }
   }
 }
 
