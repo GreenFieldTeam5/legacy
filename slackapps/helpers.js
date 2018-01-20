@@ -1,3 +1,4 @@
+var moment = require('moment');
 
 const getDynamicTriggerTime = function(quantity, measurement){
     const timeNow = new Date();
@@ -20,11 +21,29 @@ const getDynamicTriggerTime = function(quantity, measurement){
     return triggerTime;
   }
 
-const getStaticTriggerTime = function(day = new Date().getDate(), hours = new Date().getHours(), mins = new Date().getHours()) {
-    const timeNow = new Date();
-    
-    console.log('day ' + day);
-    return triggerTime;
+const getStaticTriggerTime = function(word) {
+    var timeNow = new Date();
+    var day  = timeNow.getDate();
+    var hour = timeNow.getHours();
+    var mins = timeNow.getMinutes();
+
+    if (word.includes(':')) {
+        hour = word.substring(0, word.length - 2).split(':')[0];
+        mins = word.substring(0, word.length - 2).split(':')[1];
+        if (word.includes('pm')) hour = parseInt(hour) + 12;
+    } else {
+        if (word.includes('pm')) {
+            hour = parseInt(word.split('pm')[0]) + 12;
+            mins = 0;
+        } else if (word.includes('am')) {
+            hour = word.split('am')[0];
+            mins = 0;
+        }
+    }
+
+    triggerTime = new Date(timeNow.setHours(hour, mins, 0));
+
+    return triggerTime;    
 }
 
  module.exports = {

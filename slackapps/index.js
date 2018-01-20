@@ -40,19 +40,17 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
   // remind me to be kind in 10 minutes
   if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
     var endOfAction = wordsOfMessage.indexOf('in');
+    var verb        = wordsOfMessage.slice(3, endOfAction)
+    var lastWord    = wordsOfMessage[wordsOfMessage.length - 1];
     var triggerTime;
 
     if (endOfAction === -1) {
       endOfAction = wordsOfMessage.indexOf('at');
-      var verb    = wordsOfMessage.slice(3, endOfAction)
-      var lastWord = wordsOfMessage[wordsOfMessage.length - 1];
-      // if (lastWord === 'tonight') {
-      // O}
-      // you need to figure out how to do 5.00pm stuff on timeNow
-      var triggerTime = helpers.getStaticTriggerTime();
-
+      verb        = wordsOfMessage.slice(3, endOfAction)
+      triggerTime = helpers.getStaticTriggerTime(lastWord);
+      console.log('static trigger time');
     } else {
-      var verb        = wordsOfMessage.slice(3, endOfAction)
+      console.log('dynamic trigger time');
       var quantity    = parseInt(wordsOfMessage[endOfAction + 1]);
       var measurement = wordsOfMessage[endOfAction + 2];
       triggerTime     = helpers.getDynamicTriggerTime(quantity, measurement);
