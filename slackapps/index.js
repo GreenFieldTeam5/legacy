@@ -3,6 +3,8 @@ const reminderBotApp = require('./ReminderApp.js');
 const CronJob = require('cron').CronJob;
 const helpers = require('./helpers.js');
 const Moment = require('moment');
+const db = require('../database/index.js');
+const socketHelpers = require('../server/webSocket.js');
 
 // Line 104-105 webSocket.js
 
@@ -32,6 +34,14 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
   return false;
 };
 
+const response = (code, message, method, data) =>
+  JSON.stringify({
+    code,
+    message,
+    method,
+    data,
+  });
+        
 const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
   const wordsOfMessage = messageText.split(' ');
 
@@ -46,7 +56,20 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
 
     try {
       new CronJob(triggerTime, function() {
-        console.log(verb.join(' '));
+        const message = verb.join(' ');
+        db.postMessage(message, 'Slack-Bot', 0);
+        var slackBotMessage = db.getMessages(0).then(data => {
+          let msg = {
+            method: 'POSTMESSAGE',
+            data: {
+              username: 'Slack-Bot',
+              text: 'test',
+              workspaceId: 0
+            }
+          }
+          ws.send(JSON.stringify(msg));
+        });
+
       }, null, true, 'America/Los_Angeles');
     } catch(ex) {
       console.log("cron pattern not valid");
