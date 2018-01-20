@@ -34,14 +34,6 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
   return false;
 };
 
-const response = (code, message, method, data) =>
-  JSON.stringify({
-    code,
-    message,
-    method,
-    data,
-  });
-        
 const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
   const wordsOfMessage = messageText.split(' ');
 
@@ -58,12 +50,17 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
       new CronJob(triggerTime, function() {
         const message = verb.join(' ');
         db.postMessage(message, 'Slack-Bot', 0);
-        var slackBotMessage = db.getMessages(0).then(data => {
+        db.getMessages(0).then(data => {
+          console.log(data[data.length - 1]);
+          const slackBotMessage = data[data.length - 1];
           let msg = {
             method: 'POSTMESSAGE',
             data: {
-              username: 'Slack-Bot',
-              text: 'test',
+              id: slackBotMessage.id,
+              username:slackBotMessage.username,
+              text: slackBotMessage.text,
+              createdAt: triggerTime,
+              activeEmoji: 'em-robot_face',
               workspaceId: 0
             }
           }

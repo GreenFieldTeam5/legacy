@@ -15,7 +15,8 @@ export default class App extends React.Component {
       messages: [
         {
           text: 'Type /remind to set yourself a quick reminder',
-          username: 'Slack-bot',
+          username: 'Slack-Bot',
+          activeEmoji: 'em-robot_face',
           id: 0,
           createdAt: new Date(),
           workspaceId: 0,

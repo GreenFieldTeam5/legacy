@@ -111,7 +111,8 @@ export default class extends React.Component {
         <Container style={styles.body}>
           <Media>
             <div style={styles.proPic} onClick={this.handleEmojiDropdownClick}>
-              <i style={styles.proPic} className={`em ${message.username === this.props.activeUsername ? this.props.activeEmoji : 'em-stuck_out_tongue_winking_eye'}`}></i>
+              <i style={styles.proPic} className={`em ${((message.username === this.props.activeUsername) || (message.username === 'Slack-Bot')) 
+              ? this.props.activeEmoji : 'em-stuck_out_tongue_winking_eye'}`}></i>
             </div>
           </Media>
           <div style={{ position: 'relative' }}>
