@@ -30,6 +30,17 @@ router.get('/signup', reactRoute);
 router.get('/login', reactRoute);
 router.get('/messages', passport.authenticate('local', { failureRedirect: '/login' }), reactRoute);
 
+// GET request to /userdetails, used to get userId from username
+router.get('/userdetails/:username', async (req, res) => {
+  try {
+    const user = await db.getUser(req.params.username);
+    return res.status(200).json(user.id);
+  } catch (err) {
+    console.log(err);
+    return res.status(401).json(err.stack);
+  }
+});
+
 // POST request to /signup, used to register users
 /*
   Request object from client

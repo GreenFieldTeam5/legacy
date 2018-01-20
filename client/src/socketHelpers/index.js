@@ -43,6 +43,23 @@ const sendMessage = (data) => {
   ws.send(JSON.stringify(msg));
 };
 
+// takes a few params which it inputs to the influxDB
+const sendKeystrokeMetaData = (keystrokeData) => {
+  const keystrokePacket = {
+    method: 'KEYSTROKEPACKET',
+    data: {
+      user_id: keystrokeData.user_id,
+      keystroke_duration: keystrokeData.keystroke_duration,
+      millisecondsAfterMidnightLocalTime: keystrokeData.millisecondsAfterMidnightLocalTime,
+      current_timezone: keystrokeData.current_timezone,
+    },
+  };
+
+  console.log('End of trying to send of keystroke process: ', Date());
+
+  ws.send(JSON.stringify(keystrokePacket));
+};
+
 // takes a workspace Id as INT for parameter and returns the messages for that current workspace
 const getWorkSpaceMessagesFromServer = (id) => {
   const msg = { method: 'GETMESSAGES', data: { workspaceId: id } };
@@ -65,6 +82,8 @@ const filterMsgByWorkSpace = (msg) => {
 const afterConnect = () => {
   ws.onmessage = (event) => {
     let serverResp = JSON.parse(event.data);
+
+    console.log('Server response should not be being called');
 
     // TODO: better error handling. Temp till complete switch statements
     if (serverResp.code === 400) {
@@ -111,4 +130,4 @@ const connect = (server, component) => {
   });
 };
 
-export { connect, sendMessage, afterConnect, getWorkSpaceMessagesFromServer };
+export { connect, sendMessage, afterConnect, getWorkSpaceMessagesFromServer, sendKeystrokeMetaData };

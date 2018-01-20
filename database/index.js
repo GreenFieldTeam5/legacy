@@ -5,13 +5,10 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config();
 
-
 const client = new Client({
-  connectionString: process.env.DATABASE_URL || 'slack-casa',
+  connectionString: process.env.DATABASE_URL,
   ssl: false,
 });
-
-console.log('Index.js ')
 
 client
   .connect()
@@ -63,7 +60,7 @@ const createUser = (username, passhash, email, passhint, clientTimezone) =>
     'INSERT INTO users (username, password, email, password_hint) VALUES ($1, $2, $3, $4) RETURNING *',
     [username, passhash, email, passhint],
   ).then((data) => {
-    client.query("INSERT INTO bodyclocks (current_timezone, user_id) VALUES ($1, (SELECT id from users WHERE username= $2))", [clientTimezone, username])
+    client.query("INSERT INTO bodyclocks (current_timezone, user_id, total_milliseconds_between_all_keystrokes_00, total_number_keystrokes_00) VALUES ($1, (SELECT id from users WHERE username= $2), $3, $4)", [clientTimezone, username, 23000, 1000])
       .then(() => {
         console.log('What is data: ', data);
         return data.rows[0];
@@ -129,5 +126,5 @@ module.exports = {
   getWorkspaces,
   getEmails,
   getPasswordHint,
-  getAllTimezonesForWorkspace
+  getAllTimezonesForWorkspace,
 };

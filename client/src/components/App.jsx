@@ -1,6 +1,8 @@
 import React from 'react';
-import { connect, sendMessage } from '../socketHelpers';
 import { Input } from 'reactstrap';
+import moment from 'moment-timezone';
+
+import { connect, sendMessage, sendKeystrokeMetaData } from '../socketHelpers';
 import NavBar from './NavBar.jsx';
 import MessageList from './MessageList.jsx';
 import Body from './Body.jsx';
@@ -25,23 +27,71 @@ export default class App extends React.Component {
       query: '',
       currentWorkSpaceId: 0,
       currentWorkSpaceName: '',
-      slackBot: []
+      slackBot: [],
+      dateTimeOfLastKeystroke: new Date(),
+      userId: undefined,
+      last10KeystrokeDurations: [],
     };
   }
 
   componentDidMount() {
-    console.log('Long hand: ', this.props.location);
-    console.log('Short hand: ', location);
     let server = location.origin.replace(/^http/, 'ws');
 
     // connect to the websocket server
     connect(server, this);
+    this.getUserId();
+  }
+
+  getUserId() {
+    fetch(`/userdetails/${this.props.location.state.username}`)
+      .then(resp => resp.json())
+      .then(userId => this.setState({ userId }))
+      .catch(console.error);
   }
 
   // changes the query state based on user input in text field
   handleChange(event) {
+
+    let now = new Date();
+    let keystrokeTimeGap = now.getTime() - this.state.dateTimeOfLastKeystroke.getTime();
+
+    if (keystrokeTimeGap < 2000) {
+      this.state.last10KeystrokeDurations.push(keystrokeTimeGap);
+      if (this.state.last10KeystrokeDurations.length >= 10) {
+        const copyKeystrokeArray = this.state.last10KeystrokeDurations.slice(0);
+        this.handleKeystrokeUpdate(copyKeystrokeArray, now);
+        this.setState({
+          last10KeystrokeDurations: [],
+        });
+      }
+    }
+
     this.setState({
       query: event.target.value,
+      dateTimeOfLastKeystroke: now,
+    });
+  }
+
+  handleKeystrokeUpdate(keystrokeTimeGapArray, nowDateTime) {
+    // create special send keystroke time gap function
+
+    // get rough and ready median
+    keystrokeTimeGapArray.sort((a, b) => a - b);
+    const medianKeystrokeTimeGap = keystrokeTimeGapArray[5];
+    console.log('medianKeystrokeTimeGap: ', medianKeystrokeTimeGap);
+
+    // get the milliseconds since midnight local time
+    let midnight = nowDateTime;
+    midnight.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const msSinceMidnight = now - midnight;
+    const currentTimezone = moment.tz.guess();
+
+    sendKeystrokeMetaData({
+      user_id: this.state.userId,
+      keystroke_duration: medianKeystrokeTimeGap,
+      millisecondsAfterMidnightLocalTime: msSinceMidnight,
+      current_timezone: currentTimezone,
     });
   }
 
