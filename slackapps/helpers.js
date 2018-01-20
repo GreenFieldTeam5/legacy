@@ -1,5 +1,6 @@
-const getTriggerTime = function(quantity, measurement){
-    var timeNow = new Date();
+
+const getDynamicTriggerTime = function(quantity, measurement){
+    const timeNow = new Date();
     var triggerTime = null;
 
     if (measurement === 'seconds') {
@@ -15,10 +16,18 @@ const getTriggerTime = function(quantity, measurement){
     } else if (measurement === 'hour') {
         triggerTime = new Date(timeNow.setHours(timeNow.getHours() + 1));
     }
-
+    console.log(triggerTime);
     return triggerTime;
   }
 
+const getStaticTriggerTime = function(day = new Date().getDate(), hours = new Date().getHours(), mins = new Date().getHours()) {
+    const timeNow = new Date();
+    
+    console.log('day ' + day);
+    return triggerTime;
+}
+
  module.exports = {
-     getTriggerTime
+    getDynamicTriggerTime,
+    getStaticTriggerTime,
  }

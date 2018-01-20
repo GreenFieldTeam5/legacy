@@ -39,12 +39,26 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
 
   // remind me to be kind in 10 minutes
   if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
-    var endOfVerb   = wordsOfMessage.indexOf('in');
-    var verb        = wordsOfMessage.slice(3, endOfVerb)
-    var quantity    = parseInt(wordsOfMessage[endOfVerb + 1]);
-    var measurement = wordsOfMessage[endOfVerb + 2];
+    var endOfAction = wordsOfMessage.indexOf('in');
+    var triggerTime;
 
-    var triggerTime = helpers.getTriggerTime(quantity, measurement);
+    if (endOfAction === -1) {
+      endOfAction = wordsOfMessage.indexOf('at');
+      var verb    = wordsOfMessage.slice(3, endOfAction)
+      var lastWord = wordsOfMessage[wordsOfMessage.length - 1];
+      // if (lastWord === 'tonight') {
+      // O}
+      // you need to figure out how to do 5.00pm stuff on timeNow
+      var triggerTime = helpers.getStaticTriggerTime();
+
+    } else {
+      var verb        = wordsOfMessage.slice(3, endOfAction)
+      var quantity    = parseInt(wordsOfMessage[endOfAction + 1]);
+      var measurement = wordsOfMessage[endOfAction + 2];
+      triggerTime     = helpers.getDynamicTriggerTime(quantity, measurement);
+    }
+
+    console.log("triggerTime", triggerTime);
 
     try {
       new CronJob(triggerTime, function() {
