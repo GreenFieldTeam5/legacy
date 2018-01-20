@@ -39,9 +39,9 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
 
   // remind me to be kind in 10 minutes
   if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
-    var endOfVerb = wordsOfMessage.indexOf('in');
-    var verb = wordsOfMessage.slice(3, endOfVerb) 
-    var quantity = parseInt(wordsOfMessage[endOfVerb + 1]);
+    var endOfVerb   = wordsOfMessage.indexOf('in');
+    var verb        = wordsOfMessage.slice(3, endOfVerb)
+    var quantity    = parseInt(wordsOfMessage[endOfVerb + 1]);
     var measurement = wordsOfMessage[endOfVerb + 2];
 
     var triggerTime = helpers.getTriggerTime(quantity, measurement);
