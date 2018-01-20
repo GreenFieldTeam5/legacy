@@ -48,5 +48,5 @@ const getStaticTriggerTime = function(word) {
 
  module.exports = {
     getDynamicTriggerTime,
-    getStaticTriggerTime,
+    getStaticTriggerTime
  }
