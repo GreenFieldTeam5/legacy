@@ -51,14 +51,15 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
         const message = verb.join(' ');
         db.postMessage(message, 'Slack-Bot', 0);
         db.getMessages(0).then(data => {
-          console.log(data[data.length - 1]);
-          const slackBotMessage = data[data.length - 1];
+          const slackBotObj = data[data.length - 1];
+          const senderUsername = (data[data.length - 2].username[0]).toUpperCase() + data[data.length - 2].username.substr(1);
+          const text = `Hey ${senderUsername}, Just here to remind you to ${slackBotObj.text.bold()}.`
           let msg = {
             method: 'POSTMESSAGE',
             data: {
-              id: slackBotMessage.id,
-              username:slackBotMessage.username,
-              text: slackBotMessage.text,
+              id: slackBotObj.id,
+              username:slackBotObj.username,
+              text: text,
               createdAt: triggerTime,
               activeEmoji: 'em-robot_face',
               workspaceId: 0
