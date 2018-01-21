@@ -3,6 +3,9 @@ const reminderBotApp = require('./ReminderApp.js');
 const CronJob = require('cron').CronJob;
 const helpers = require('./helpers.js');
 const Moment = require('moment');
+const db = require('../database/index.js');
+const socketHelpers = require('../server/webSocket.js');
+const axios = require('axios');
 
 // Line 104-105 webSocket.js
 
@@ -32,21 +35,49 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
   return false;
 };
 
-const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
+const parseMessageForRemindAndMathBot = (messageText, username, workspaceId, ws, wss) => {
   const wordsOfMessage = messageText.split(' ');
+  const firstWord = wordsOfMessage[0];
 
-  // remind me to be kind in 10 minutes
-  if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
-    var endOfVerb = wordsOfMessage.indexOf('in');
-    var verb = wordsOfMessage.slice(3, endOfVerb) 
-    var quantity = parseInt(wordsOfMessage[endOfVerb + 1]);
-    var measurement = wordsOfMessage[endOfVerb + 2];
+  if (firstWord.includes('/help')) {
+    const msg = `Hi, I am Sally the Helper Bot! Type /remind, /math, /fact, /chuck to utilize my other friends!`;
 
-    var triggerTime = helpers.getTriggerTime(quantity, measurement);
+    setTimeout(function() {
+      helpers.botMessage(new Date(), msg, 'Sally-Bot', 'em-unicorn_face', ws, wss);
+    }, 1000);
+  } else if (firstWord === '/math') {
+    var answer = eval(wordsOfMessage.slice(1).join(' '));
+    setTimeout(function() {
+      helpers.botMessage(new Date(), answer, 'Leo-Bot', 'em-lion_face', ws, wss);
+    }, 1000);
+  } else if (firstWord === '/chuck') {
+    axios.get('https://api.chucknorris.io/jokes/random')
+    .then(data => {
+      setTimeout(function() {
+        helpers.botMessage(new Date(), data.data.value, 'Chuck-Norris-Bot', 'em-upside_down_face', ws, wss);
+      }, 1000);
+    });
+  } else if (firstWord === '/remind' && wordsOfMessage[1] === 'me') {
+    var static = false;
+    var triggerTime;
+    var lastWord = wordsOfMessage[wordsOfMessage.length - 1];
+
+    if (wordsOfMessage.indexOf('in') !== -1) endOfAction = wordsOfMessage.indexOf('in');
+    else {
+      endOfAction = wordsOfMessage.indexOf('at');
+      static = true;
+    }
+
+    var verb = wordsOfMessage.slice(3, endOfAction)
+    if (static) triggerTime = helpers.getStaticTriggerTime(lastWord);
+    else {
+      var quantity = parseInt(wordsOfMessage[endOfAction + 1]);
+      triggerTime  = helpers.getDynamicTriggerTime(quantity, lastWord);
+    }
 
     try {
       new CronJob(triggerTime, function() {
-        console.log(verb.join(' '));
+        helpers.botMessage(triggerTime, verb.join(' '), 'Joel-Bot', 'em-male-teacher', ws, wss);
       }, null, true, 'America/Los_Angeles');
     } catch(ex) {
       console.log("cron pattern not valid");
@@ -56,6 +87,6 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
 
 module.exports = {
   parseMessageForBotInvocation,
-  parseMessageForRemind,
+  parseMessageForRemindAndMathBot,
 };
 

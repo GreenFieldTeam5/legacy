@@ -27,7 +27,7 @@ export default class MessageList extends React.Component {
               message={message}
               key={message.id}
               activeUsername={this.props.activeUsername}
-              activeEmoji={this.state.activeEmoji}
+              activeEmoji={message.activeEmoji || this.state.activeEmoji}
               showEmojisDropdown={this.state.showEmojisDropdown}
               changeActiveEmoji={this.changeActiveEmoji}
             />
