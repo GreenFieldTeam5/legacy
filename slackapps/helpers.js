@@ -46,7 +46,22 @@ const getStaticTriggerTime = function(word) {
     return triggerTime;    
 }
 
+const parseMessage = function(slackBotObj, text, triggerTime) {
+    return {
+        method: 'POSTMESSAGE',
+        data: {
+            id: slackBotObj.id,
+            username:slackBotObj.username,
+            text: text,
+            createdAt: triggerTime,
+            activeEmoji: 'em-robot_face',
+            workspaceId: 0
+        }
+    }
+}
+
  module.exports = {
     getDynamicTriggerTime,
-    getStaticTriggerTime
+    getStaticTriggerTime,
+    parseMessage
  }

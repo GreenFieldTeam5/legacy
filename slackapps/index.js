@@ -37,12 +37,12 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
 const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
   const wordsOfMessage = messageText.split(' ');
 
-  // remind me to be kind in 10 minutes
-  if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
+  if (wordsOfMessage[0] === '/math') {
+    console.log ('math bot!');
+  } else if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
+    var verb, triggerTime;
     var endOfAction = wordsOfMessage.indexOf('in');
     var lastWord    = wordsOfMessage[wordsOfMessage.length - 1];
-    var verb;
-    var triggerTime;
 
     if (endOfAction === -1) {
       console.log('static trigger time');
@@ -51,9 +51,9 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
       triggerTime = helpers.getStaticTriggerTime(lastWord);
     } else {
       console.log('dynamic trigger time');
-      var quantity    = parseInt(wordsOfMessage[endOfAction + 1]);
-      verb            = wordsOfMessage.slice(3, endOfAction)
-      triggerTime     = helpers.getDynamicTriggerTime(quantity, lastWord);
+      var quantity = parseInt(wordsOfMessage[endOfAction + 1]);
+      verb         = wordsOfMessage.slice(3, endOfAction)
+      triggerTime  = helpers.getDynamicTriggerTime(quantity, lastWord);
     }
 
     console.log("triggerTime", triggerTime);
@@ -66,17 +66,7 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
           const slackBotObj = data[data.length - 1];
           const senderUsername = (data[data.length - 2].username[0]).toUpperCase() + data[data.length - 2].username.substr(1);
           const text = `Hey ${senderUsername}, Just here to remind you to ${slackBotObj.text.bold()}.`
-          let msg = {
-            method: 'POSTMESSAGE',
-            data: {
-              id: slackBotObj.id,
-              username:slackBotObj.username,
-              text: text,
-              createdAt: triggerTime,
-              activeEmoji: 'em-robot_face',
-              workspaceId: 0
-            }
-          }
+          let msg = helpers.parseMessage(slackBotObj, text, triggerTime);
           ws.send(JSON.stringify(msg));
         });
 

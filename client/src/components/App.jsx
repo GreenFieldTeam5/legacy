@@ -14,7 +14,7 @@ export default class App extends React.Component {
       // Default message informs the user to select a workspace
       messages: [
         {
-          text: 'Type /remind to set yourself a quick reminder',
+          text: 'Type /remind to set yourself a quick reminder or /math to activate the math-bot!',
           username: 'Slack-Bot',
           activeEmoji: 'em-robot_face',
           id: 0,
