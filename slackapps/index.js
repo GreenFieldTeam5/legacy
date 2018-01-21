@@ -5,6 +5,7 @@ const helpers = require('./helpers.js');
 const Moment = require('moment');
 const db = require('../database/index.js');
 const socketHelpers = require('../server/webSocket.js');
+const axios = require('axios');
 
 // Line 104-105 webSocket.js
 
@@ -34,42 +35,49 @@ const parseMessageForBotInvocation = (messageText, username, workspaceId, ws, ws
   return false;
 };
 
-const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
+const parseMessageForRemindAndMathBot = (messageText, username, workspaceId, ws, wss) => {
   const wordsOfMessage = messageText.split(' ');
+  const firstWord = wordsOfMessage[0];
 
-  if (wordsOfMessage[0] === '/math') {
-    console.log ('math bot!');
-  } else if (wordsOfMessage[0] === '/remind' && wordsOfMessage[1] === 'me') {
-    var verb, triggerTime;
-    var endOfAction = wordsOfMessage.indexOf('in');
-    var lastWord    = wordsOfMessage[wordsOfMessage.length - 1];
+  if (firstWord.includes('/help')) {
+    const msg = `Hi, I am Sally the Helper Bot! Type /remind, /math, /fact, /chuck to utilize my other friends!`;
 
-    if (endOfAction === -1) {
-      console.log('static trigger time');
+    setTimeout(function() {
+      helpers.botMessage(new Date(), msg, 'Sally-Bot', 'em-unicorn_face', ws, wss);
+    }, 1000);
+  } else if (firstWord === '/math') {
+    var answer = eval(wordsOfMessage.slice(1).join(' '));
+    setTimeout(function() {
+      helpers.botMessage(new Date(), answer, 'Leo-Bot', 'em-lion_face', ws, wss);
+    }, 1000);
+  } else if (firstWord === '/chuck') {
+    axios.get('https://api.chucknorris.io/jokes/random')
+    .then(data => {
+      setTimeout(function() {
+        helpers.botMessage(new Date(), data.data.value, 'Chuck-Norris-Bot', 'em-upside_down_face', ws, wss);
+      }, 1000);
+    });
+  } else if (firstWord === '/remind' && wordsOfMessage[1] === 'me') {
+    var static = false;
+    var triggerTime;
+    var lastWord = wordsOfMessage[wordsOfMessage.length - 1];
+
+    if (wordsOfMessage.indexOf('in') !== -1) endOfAction = wordsOfMessage.indexOf('in');
+    else {
       endOfAction = wordsOfMessage.indexOf('at');
-      verb        = wordsOfMessage.slice(3, endOfAction)
-      triggerTime = helpers.getStaticTriggerTime(lastWord);
-    } else {
-      console.log('dynamic trigger time');
+      static = true;
+    }
+
+    var verb = wordsOfMessage.slice(3, endOfAction)
+    if (static) triggerTime = helpers.getStaticTriggerTime(lastWord);
+    else {
       var quantity = parseInt(wordsOfMessage[endOfAction + 1]);
-      verb         = wordsOfMessage.slice(3, endOfAction)
       triggerTime  = helpers.getDynamicTriggerTime(quantity, lastWord);
     }
 
-    console.log("triggerTime", triggerTime);
-
     try {
       new CronJob(triggerTime, function() {
-        const message = verb.join(' ');
-        db.postMessage(message, 'Slack-Bot', 0);
-        db.getMessages(0).then(data => {
-          const slackBotObj = data[data.length - 1];
-          const senderUsername = (data[data.length - 2].username[0]).toUpperCase() + data[data.length - 2].username.substr(1);
-          const text = `Hey ${senderUsername}, Just here to remind you to ${slackBotObj.text.bold()}.`
-          let msg = helpers.parseMessage(slackBotObj, text, triggerTime);
-          ws.send(JSON.stringify(msg));
-        });
-
+        helpers.botMessage(triggerTime, verb.join(' '), 'Joel-Bot', 'em-male-teacher', ws, wss);
       }, null, true, 'America/Los_Angeles');
     } catch(ex) {
       console.log("cron pattern not valid");
@@ -79,6 +87,6 @@ const parseMessageForRemind = (messageText, username, workspaceId, ws, wss) => {
 
 module.exports = {
   parseMessageForBotInvocation,
-  parseMessageForRemind,
+  parseMessageForRemindAndMathBot,
 };
 

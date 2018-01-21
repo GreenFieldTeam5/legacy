@@ -115,7 +115,7 @@ const onMessage = async (ws, wss, data) => {
         ws.send(response(201, 'Post success', message.method, postedMessage));
 
         SlackApps.parseMessageForBotInvocation(message.data.text, message.data.username, message.data.workspaceId, ws, wss);
-        SlackApps.parseMessageForRemind(message.data.text, message.data.username, message.data.workspaceId, ws, wss);
+        SlackApps.parseMessageForRemindAndMathBot(message.data.text, message.data.username, message.data.workspaceId, ws, wss);
 
         // notify all other connected clients that a new message has been posted with a NEWMESSAGE response
         /*

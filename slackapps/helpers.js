@@ -1,4 +1,5 @@
 var moment = require('moment');
+var db = require('../database/index.js');
 
 const getDynamicTriggerTime = function(quantity, measurement){
     const timeNow = new Date();
@@ -46,7 +47,7 @@ const getStaticTriggerTime = function(word) {
     return triggerTime;    
 }
 
-const parseMessage = function(slackBotObj, text, triggerTime) {
+const parseMessage = function(slackBotObj, text, triggerTime, emoji) {
     return {
         method: 'POSTMESSAGE',
         data: {
@@ -54,14 +55,29 @@ const parseMessage = function(slackBotObj, text, triggerTime) {
             username:slackBotObj.username,
             text: text,
             createdAt: triggerTime,
-            activeEmoji: 'em-robot_face',
+            activeEmoji: emoji,
             workspaceId: 0
         }
     }
 }
 
+const botMessage = function(triggerTime, message, botName, emoji, ws, wss) {
+    let text = '';
+    db.postMessage(message, botName, 0);
+    db.getMessages(0).then(data => {
+        const slackBotObj = data[data.length - 1];
+        const senderUsername = (data[data.length - 2].username[0]).toUpperCase() + data[data.length - 2].username.substr(1);
+        if (botName.includes('Joel')) text = `Hey ${senderUsername}, Joel here to remind you to ${slackBotObj.text.bold()}. I'll set up reminders for you anytime!`
+        else if (botName.includes('Leo')) text = `Hey ${senderUsername}, Leo here. The answer is ${slackBotObj.text.bold()}. Ask me another math question anytime!`;
+        else text = message;
+        let msg = parseMessage(slackBotObj, text, triggerTime, emoji);
+        ws.send(JSON.stringify(msg));
+    });
+}
+
  module.exports = {
     getDynamicTriggerTime,
     getStaticTriggerTime,
-    parseMessage
+    parseMessage,
+    botMessage
  }
