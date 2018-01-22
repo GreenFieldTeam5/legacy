@@ -78,8 +78,7 @@ export default class App extends React.Component {
     // get rough and ready median
     keystrokeTimeGapArray.sort((a, b) => a - b);
     const medianKeystrokeTimeGap = keystrokeTimeGapArray[5];
-    console.log('medianKeystrokeTimeGap: ', medianKeystrokeTimeGap);
-
+    
     // get the milliseconds since midnight local time
     let midnight = nowDateTime;
     midnight.setHours(0, 0, 0, 0);

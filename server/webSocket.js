@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
 
 const db = require('../database');
-const influxDb = require('../database/influxdb.js');
 const SlackApps = require('../slackapps');
 
 // creates a response object for sending to clients
@@ -45,7 +44,7 @@ const onMessage = async (ws, wss, data) => {
   switch (message.method) {
     case 'KEYSTROKEPACKET':
       try {
-        influxDb.writeLatestKeystrokeToDb(message.data);
+        let unused = await db.writeLatestKeystrokeToDb(message.data);
         return true;
       } catch (err) {
         return ws.send(response(400, err.stack, message.method));

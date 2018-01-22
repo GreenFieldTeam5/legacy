@@ -38,36 +38,37 @@ const circadianAlertnessDictionary = {
   '23': 0.53,
 };
 
-// takes input string in format '14:00' --> returns double between 0 and 1;
-const convert24HourClockToCircadianAlertnessPercentage = (timeString) => {
-  const timeStringArray = timeString.split(':');
-  const hour = timeStringArray[0];
-  const circadianAlertnessPercentage = circadianAlertnessDictionary[hour] * 100;
-  return circadianAlertnessPercentage;
-};
-
 const displayWorkspaceBodyClocks = async (messageText, username, workspaceId, ws, wss, parsedTime) => {
 
   let timezonesStringArray = ['These are the timezones of people in here:'];
 
-  // get the timezones of everyone in the workspace
   let timezones = await db.getAllTimezonesForWorkspace();
 
-  timezones.forEach((dbResult) => {
+  console.log('Timezones in here: ', timezones);
+
+  for (let dbResult of timezones) {
     let timeWhereTheyAre;
     if (parsedTime) {
       timeWhereTheyAre = moment().hours(parsedTime).minutes(0).tz(dbResult.current_timezone).format('HH:mm');
+
+      // TODO what percentageAlertness will users be at, at a specific time
+
     } else {
       // no time specified default to now
       timeWhereTheyAre = moment.tz(dbResult.current_timezone).format('HH:mm');
     }
 
-    const circadianAlertness = convert24HourClockToCircadianAlertnessPercentage(timeWhereTheyAre);
+    let alertnessObject = await db.whatPercentageAlertnessAreUsersCurrentlyAt([dbResult.id]);
+
+    console.log('alertnessObject: ', alertnessObject);
+
+    const circadianAlertness = alertnessObject[dbResult.id];
 
     timezonesStringArray.push(`(${dbResult.username}, ${timeWhereTheyAre}, ${dbResult.current_timezone}, circadianAlertness: ${circadianAlertness})`);
-  });
+  }
 
   const timezoneReplyString = timezonesStringArray.join(' ');
+  console.log('timezoneReplyString: ', timezoneReplyString);
 
   // post the given message to the database
   let postedMessage = await db.postMessage(

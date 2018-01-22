@@ -51,7 +51,6 @@
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
-    "influx": "^5.0.0-alpha.4",
     "jquery": "^3.2.1",
     "moment-timezone": "^0.5.14",
     "nodemailer": "^4.4.1",
